@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-headers_parameters={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"}
+headers_parameters={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"}#Kendi user agentinizi buraya yapıştırabilirsiniz :
 def resimCek(aranilacakBaslik,turSayisi,dosyaYolu=""):
     path ="https://www.istockphoto.com/tr/search/2/image?phrase="
     splitVeri = aranilacakBaslik.split(" ")
@@ -11,19 +11,17 @@ def resimCek(aranilacakBaslik,turSayisi,dosyaYolu=""):
     path=path+"&page=1"
     print(path)
     butunIdler = []
-    for i in range(1,turSayisi):
-        bulunanYer =path[-1]
-              
+    for i in range(1,turSayisi+1):            
         adres=path[:len(path)-1]       
         siteAdresi_=adres+str(i)       
         r = requests.get(siteAdresi_,headers=headers_parameters)
         soup = BeautifulSoup(r.content, "lxml", from_encoding='UTF-8')       
-        resimId = soup.find_all("img",{"class":"MosiacAsset-module__thumb___L2F4y"})
+        resimId = soup.find_all("img",{"class":"MosaicAsset-module__thumb___tdc6z"})
         butunIdler.append(resimId)
            
     #Cektigimiz resim adreslerini bilgisayara kaydediyoruz :
     index=0
-    for a,resimAdresi in enumerate(butunIdler):      
+    for a,resimAdresi in enumerate(butunIdler):   
         for j in range(len(resimAdresi)):
             adres=requests.get(resimAdresi[j]["src"],headers=headers_parameters)
             file = open(f"{dosyaYolu}/{index}.jpg", "wb")
@@ -32,9 +30,8 @@ def resimCek(aranilacakBaslik,turSayisi,dosyaYolu=""):
             index+=1   
     
 def main():
-    resimCek("car",6,"images")
+    resimCek("car",10,"images")
 
 
 if __name__=='__main__':
     main()
-
